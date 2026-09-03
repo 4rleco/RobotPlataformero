@@ -5378,9 +5378,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1085279498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 776cb17bb48d05948bdc0a2210f1bfdb, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f7a97e8749cc29459ab8ba78babc3d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Administrador_QTE
+  timeBetweenQTE: 20
+  timeToComplete: 2.5
+  startPoint: {fileID: 1018340198}
+  arrowText: {fileID: 1450740436}
 --- !u!213 &1095271001
 Sprite:
   m_ObjectHideFlags: 0
@@ -7423,6 +7427,7 @@ GameObject:
   - component: {fileID: 1952397635}
   - component: {fileID: 1952397634}
   - component: {fileID: 1952397638}
+  - component: {fileID: 1952397639}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -7524,6 +7529,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14a7859bce0eaa54e98adbe02441e263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameUI
+  jumpKey: {fileID: 1967386292}
+  dashKey: {fileID: 1631005600}
+  crouchKey: {fileID: 497682961}
+  player: {fileID: 1831038083}
+--- !u!114 &1952397639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952397633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a88a150f1a4f04b9782ec6dcafc0c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameUI
   jumpKey: {fileID: 1967386292}
