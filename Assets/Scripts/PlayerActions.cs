@@ -13,6 +13,12 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private int maxJumps = 2;
     private int jumpsRemaining;
 
+    [Header("Start")]
+    [SerializeField] private GameObject startPoint;
+
+    [Header("Finish")]
+    [SerializeField] private GameObject endPoint;
+
     [Header("Speed")]
     [SerializeField] private int speed = 10;
     private float currentSpeed;
@@ -33,6 +39,25 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float margenPosterior = 1f;
     [SerializeField] private float margenAncho = 1f;
 
+    [Header("Key change timer")]
+    [SerializeField] private float keyTimer = 3.0f;
+
+    // --- NUEVOS ARRAYS FILAS QWERTY ---
+    private readonly KeyCode[] filaSuperior = {
+        KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.T,
+        KeyCode.Y, KeyCode.U, KeyCode.I, KeyCode.O, KeyCode.P
+    };
+
+    private readonly KeyCode[] filaMedia = {
+        KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F, KeyCode.G,
+        KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L
+    };
+
+    private readonly KeyCode[] filaInferior = {
+        KeyCode.Z, KeyCode.X, KeyCode.C, KeyCode.V,
+        KeyCode.B, KeyCode.N, KeyCode.M
+    };
+
     private bool isCrouching = false;
     private bool wantsToStandUp = false;
     private BoxCollider2D boxCollider;
@@ -44,8 +69,14 @@ public class PlayerActions : MonoBehaviour
     private KeyCode dashKey = KeyCode.D;
     private KeyCode crouchKey = KeyCode.Z;
 
+    private float currentKeyTimer = 0.0f;
+
+    Vector3 posicionPantalla;
+
     void Start()
     {
+        transform.position = startPoint.transform.position;
+
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
 
@@ -58,6 +89,7 @@ public class PlayerActions : MonoBehaviour
         jumpsRemaining = maxJumps;
 
         currentSpeed = speed;
+        currentKeyTimer = keyTimer;
     }
 
     void Update()
@@ -104,8 +136,24 @@ public class PlayerActions : MonoBehaviour
             canDash = true;
         }
 
+        if (currentKeyTimer <= 0.0f)
+        {
+            SetRandKey();
+
+            currentKeyTimer += keyTimer;
+        }
+
         if (currentSpeed < speed)
             currentSpeed += 0.1f;
+
+        currentKeyTimer -= Time.deltaTime;
+
+        posicionPantalla = Camera.main.WorldToViewportPoint(transform.position);
+
+        if (posicionPantalla.y < 0)
+        {
+            transform.position = startPoint.transform.position;
+        }
     }
 
     // Método modificado para elegir una tecla aleatoria de un array específico
@@ -114,6 +162,43 @@ public class PlayerActions : MonoBehaviour
         int randomIndex = UnityEngine.Random.Range(0, fila.Length);
         return fila[randomIndex];
     }
+
+    private void SetRandKey()
+    {
+        int randNum = UnityEngine.Random.Range(0, 3);
+
+        switch (randNum)
+        {
+            case 0: // JUMP -> Fila Superior
+                KeyCode prevJump = jumpKey;
+                do
+                {
+                    jumpKey = GetRandKeyFromRow(filaSuperior);
+                }
+                // Evitamos que se repita la misma tecla de salto anterior
+                while (jumpKey == prevJump);
+                break;
+
+            case 1: // DASH -> Fila Media
+                KeyCode prevDash = dashKey;
+                do
+                {
+                    dashKey = GetRandKeyFromRow(filaMedia);
+                }
+                while (dashKey == prevDash);
+                break;
+
+            case 2: // CROUCH -> Fila Inferior
+                KeyCode prevCrouch = crouchKey;
+                do
+                {
+                    crouchKey = GetRandKeyFromRow(filaInferior);
+                }
+                while (crouchKey == prevCrouch);
+                break;
+        }
+    }
+
     private void Agacharse()
     {
         isCrouching = true;
