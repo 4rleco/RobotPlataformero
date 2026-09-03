@@ -10,6 +10,9 @@ public class PlayerActions : MonoBehaviour
 {
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
+public class PlayerActions : MonoBehaviour
+{
+    private Rigidbody2D rb;
 
     [Header("Speed")]
     [SerializeField] private int speed = 10;
@@ -24,7 +27,7 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float dashDistance = 3f;
     [SerializeField] private float dashSpeed = 8f;
     [SerializeField] private float dashCooldown = 2.0f;
-    [SerializeField] private LayerMask dashObstacleLayer; // Capa de los obstáculos que bloquean el Dash
+    [SerializeField] private LayerMask dashObstacleLayer; // Capa de los obstï¿½culos que bloquean el Dash
     [SerializeField] private float margenPared = 1f; // Distancia de seguridad para no quedar pegado dentro de la pared
     private bool canDash = true;
     private float dashTimer = 0f;
@@ -34,6 +37,9 @@ public class PlayerActions : MonoBehaviour
 
     private KeyCode jumpKey = KeyCode.W;
     private KeyCode dashKey = KeyCode.D;
+    private int jumpsRemaining;
+
+    private KeyCode jumpKey = KeyCode.W;
 
     void Start()
     {
