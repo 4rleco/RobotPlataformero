@@ -25,15 +25,28 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float dashSpeed = 8f;
     [SerializeField] private float dashCooldown = 2.0f;
     [SerializeField] private LayerMask dashObstacleLayer; // Capa de los obstáculos que bloquean el Dash
-    [SerializeField] private float margenPared = 1f; // Distancia de seguridad para no quedar pegado dentro de la pared
+    [SerializeField] private float wallSize = 1f; // Distancia de seguridad para no quedar pegado dentro de la pared
     private bool canDash = true;
     private float dashTimer = 0f;
     private bool isDashing = false;
 
+    [Header("Agachado (Crouch)")]
+    [SerializeField] private float multiplicadorAlturaCollider = 0.5f;
+    [SerializeField] private LayerMask roofLayer;
+    [SerializeField] private float nextSize = 1f;
+    [SerializeField] private float widthSize = 1f;
+
     private int jumpsRemaining;
+
+    private bool isCrouching = false;
+    private bool wantsToStandUp = false;
+
+    private Vector2 originalColliderSize;
+    private Vector2 offsetOriginalCollider;
 
     private KeyCode jumpKey = KeyCode.W;
     private KeyCode dashKey = KeyCode.D;
+    private KeyCode crouchKey = KeyCode.Z;
 
     void Start()
     {
@@ -47,6 +60,8 @@ public class PlayerActions : MonoBehaviour
     void Update()
     {
         transform.Translate(new Vector3(1 * currentSpeed * Time.deltaTime, 0, 0));
+
+        if (isDashing) return;
 
         if (Input.GetKeyDown(jumpKey) && jumpsRemaining > 0)
         {
@@ -69,6 +84,21 @@ public class PlayerActions : MonoBehaviour
         {
             canDash = true;
         }
+
+        // --- LÓGICA DE AGACHARSE ---
+        if (Input.GetKeyDown(crouchKey) && isGrounded)
+        {
+            Agacharse();
+        }
+        else if (Input.GetKeyUp(crouchKey) && isCrouching)
+        {
+            wantsToStandUp = true;
+        }
+
+        if (wantsToStandUp && isCrouching)
+        {
+            TryToStandUp();
+        }
     }
 
     private IEnumerator DashRoutine()
@@ -87,7 +117,7 @@ public class PlayerActions : MonoBehaviour
 
         if (hit.collider != null)
         {
-            distanciaEfectiva = hit.distance - margenPared;
+            distanciaEfectiva = hit.distance - wallSize;
             if (distanciaEfectiva < 0) distanciaEfectiva = 0;
         }
 
@@ -108,6 +138,48 @@ public class PlayerActions : MonoBehaviour
         isDashing = false;
         canDash = false;
         dashTimer = dashCooldown;
+    }
+    private void Agacharse()
+    {
+        isCrouching = true;
+        wantsToStandUp = false;
+
+        if (boxCollider != null)
+        {
+            boxCollider.size = new Vector2(originalColliderSize.x, originalColliderSize.y * multiplicadorAlturaCollider);
+            float reduccion = originalColliderSize.y * (1f - multiplicadorAlturaCollider);
+            boxCollider.offset = new Vector2(offsetOriginalCollider.x, offsetOriginalCollider.y - (reduccion / 2f));
+        }
+    }
+
+    private void TryToStandUp()
+    {
+        if (!RoofAbove())
+        {
+            isCrouching = false;
+            wantsToStandUp = false;
+
+            if (boxCollider != null)
+            {
+                boxCollider.size = originalColliderSize;
+                boxCollider.offset = offsetOriginalCollider;
+            }
+        }
+    }
+
+    private bool RoofAbove()
+    {
+        if (boxCollider == null) return false;
+
+        Vector2 feetCenter = (Vector2)transform.position + offsetOriginalCollider;
+        float direccion = Mathf.Sign(currentSpeed);
+
+        feetCenter.x -= (direccion * nextSize / 2f);
+        Vector2 fettSize = new Vector2(originalColliderSize.x + nextSize + widthSize, originalColliderSize.y);
+
+        Collider2D solape = Physics2D.OverlapBox(feetCenter, fettSize, 0f, roofLayer);
+
+        return solape != null;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
