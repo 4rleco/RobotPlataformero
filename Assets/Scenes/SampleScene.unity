@@ -7183,6 +7183,8 @@ MonoBehaviour:
   jumpForce: 5
   isGrounded: 0
   maxJumps: 2
+  startPoint: {fileID: 1018340198}
+  endPoint: {fileID: 252748256}
   speed: 10
   dashDistance: 3
   dashSpeed: 8
@@ -7197,6 +7199,7 @@ MonoBehaviour:
     m_Bits: 0
   margenPosterior: 1
   margenAncho: 1
+  keyTimer: 3
 --- !u!213 &1891525383
 Sprite:
   m_ObjectHideFlags: 0
@@ -7523,6 +7526,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14a7859bce0eaa54e98adbe02441e263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameUI
+  jumpKey: {fileID: 1967386292}
+  dashKey: {fileID: 1631005600}
+  crouchKey: {fileID: 497682961}
+  player: {fileID: 1831038083}
 --- !u!1 &1967386290
 GameObject:
   m_ObjectHideFlags: 0
