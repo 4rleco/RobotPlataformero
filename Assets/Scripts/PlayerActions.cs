@@ -7,7 +7,6 @@ public class PlayerActions : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Rigidbody2D rb2;
-
     
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private bool isGrounded;
@@ -352,7 +351,6 @@ public class PlayerActions : MonoBehaviour
     {
         return dashKey;
     }
-
     public KeyCode GetCrouchKey()
     {
         return crouchKey;

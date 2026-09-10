@@ -2,17 +2,13 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [Header("Follow Settings")]
-    [SerializeField] private Transform target;
+    [SerializeField] private PlayerActions player;
 
-    [Header("Ajuste de Altura")]
-    [SerializeField] private float offsetY = 0f; // Modifica este valor para subir o bajar la cámara
-
-    private void LateUpdate()
+    private void Update()
     {
-        if (target == null) return;
+       if (player == null) return;
 
-        // Mantiene el seguimiento directo en X, y le aplica el offset en Y
-        transform.position = new Vector3(target.position.x, 0 + offsetY, transform.position.z);
+        // Mantiene el seguimiento directo en X
+        transform.position = new Vector3(player.transform.position.x , transform.position.y, -10);
     }
 }
