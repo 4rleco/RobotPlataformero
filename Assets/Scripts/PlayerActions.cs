@@ -7,7 +7,7 @@ public class PlayerActions : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Rigidbody2D rb2;
-    
+
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private bool isGrounded;
 
@@ -33,6 +33,7 @@ public class PlayerActions : MonoBehaviour
     private bool canDash = true;
     private float dashTimer = 0f;
     private bool isDashing = false;
+   
 
     [Header("Agachado (Crouch)")]
     [SerializeField] private float multiplicadorAlturaCollider = 0.5f;
@@ -127,7 +128,7 @@ public class PlayerActions : MonoBehaviour
         }
 
         // --- DASH (No se permite si está agachado) ---
-        if (Input.GetKeyDown(dashKey) && !isCrouching && canDash)
+        if (Input.GetKeyDown(dashKey) && !isCrouching && canDash && currentSpeed > 0)
         {
             StartCoroutine(DashRoutine());
         }
@@ -249,6 +250,7 @@ public class PlayerActions : MonoBehaviour
 
     private IEnumerator DashRoutine()
     {
+        
         isDashing = true;
 
         float direccionX = Mathf.Sign(currentSpeed);
@@ -268,18 +270,31 @@ public class PlayerActions : MonoBehaviour
         }
 
         Vector2 posicionDestino = (Vector2)transform.position + new Vector2(direccionX * distanciaEfectiva, 0f);
+        Debug.Log(posicionDestino.x);
+
 
         float gravedadOriginal = rb.gravityScale;
+        bool hitCollision = false;
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
 
         while (Vector2.SqrMagnitude((Vector2)transform.position - posicionDestino) > 0.02f)
         {
+            if (currentSpeed <= 0)
+            {
+                Debug.Log("entro al bucle");
+                hitCollision = true;
+                break;
+            }
             transform.position = Vector2.MoveTowards(transform.position, posicionDestino, dashSpeed * Time.deltaTime);
             yield return null;
         }
 
-        transform.position = posicionDestino;
+        Debug.Log("finalizando corrutina");
+
+        if (!hitCollision)
+            transform.position = posicionDestino;
+        
         rb.gravityScale = gravedadOriginal;
         isDashing = false;
         canDash = false;
@@ -290,11 +305,11 @@ public class PlayerActions : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Floor"))
         {
-           
+
             Vector2 puntoContacto = collision.GetContact(0).point;
             Vector2 centroCollider = (Vector2)transform.position + boxCollider.offset;
 
-            
+
             if (puntoContacto.y < centroCollider.y)
             {
                 isGrounded = true;

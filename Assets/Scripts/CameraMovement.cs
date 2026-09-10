@@ -8,15 +8,14 @@ public class CameraMovement : MonoBehaviour
 
     private void Start()
     {
-        initialPosX = transform.position.x;    
+        initialPosX = transform.position.x;
     }
 
     private void Update()
     {
-       if (player == null) return;
+        if (player == null) return;
 
-        // Mantiene el seguimiento directo en X
-        transform.position = new Vector3(transform.position.x + (player.GetCurrentSpeed() * Time.deltaTime) , transform.position.y, transform.position.z);
+            transform.position = new Vector3(transform.position.x + (player.GetCurrentSpeed() * Time.deltaTime), transform.position.y, transform.position.z);
 
         if (player.GetPlayerDied())
             transform.position = new Vector3(initialPosX, transform.position.y, transform.position.z);
