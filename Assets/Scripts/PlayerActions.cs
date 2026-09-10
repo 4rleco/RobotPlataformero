@@ -61,6 +61,7 @@ public class PlayerActions : MonoBehaviour
 
     private bool isCrouching = false;
     private bool wantsToStandUp = false;
+    private bool playerDied = false;
     private BoxCollider2D boxCollider;
     private Vector2 tamanoOriginalCollider;
     private Vector2 offsetOriginalCollider;
@@ -95,6 +96,8 @@ public class PlayerActions : MonoBehaviour
 
     void Update()
     {
+        playerDied = false;
+
         transform.Translate(new Vector3(1 * currentSpeed * Time.deltaTime, 0, 0));
 
         if (isDashing) return;
@@ -154,6 +157,7 @@ public class PlayerActions : MonoBehaviour
         if (posicionPantalla.y < 0)
         {
             transform.position = startPoint.transform.position;
+            playerDied = true;
         }
     }
 
@@ -281,6 +285,7 @@ public class PlayerActions : MonoBehaviour
         canDash = false;
         dashTimer = dashCooldown;
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
@@ -354,5 +359,15 @@ public class PlayerActions : MonoBehaviour
     public KeyCode GetCrouchKey()
     {
         return crouchKey;
+    }
+
+    public float GetCurrentSpeed()
+    {
+        return currentSpeed;
+    }
+
+    public bool GetPlayerDied()
+    {
+        return playerDied;
     }
 }
