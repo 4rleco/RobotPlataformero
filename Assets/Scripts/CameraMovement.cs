@@ -15,7 +15,7 @@ public class CameraMovement : MonoBehaviour
     {
         if (player == null) return;
 
-            transform.position = new Vector3(transform.position.x + (player.GetCurrentSpeed() * Time.deltaTime), transform.position.y, transform.position.z);
+        transform.position = new Vector3(transform.position.x + (player.GetCurrentSpeed() * Time.deltaTime), transform.position.y, transform.position.z);
 
         if (player.GetPlayerDied())
             transform.position = new Vector3(initialPosX, transform.position.y, transform.position.z);

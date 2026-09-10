@@ -390,6 +390,11 @@ public class PlayerActions : MonoBehaviour
         return currentSpeed;
     }
 
+    public void SetCurrentSpeed(float speed)
+    {
+        currentSpeed = speed;
+    }
+
     public bool GetPlayerDied()
     {
         return playerDied;

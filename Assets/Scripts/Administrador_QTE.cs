@@ -19,7 +19,7 @@ public class Administrador_QTE : MonoBehaviour
     private Vector2 savePrevPlayerPosition;
 
     // Guardamos las referencias de los componentes del jugador por fuera
-    private PlayerActions playerScript;
+    private PlayerActions player;
     private Rigidbody2D playerRb;
 
     // Flechas direccionales para el QTE
@@ -29,10 +29,10 @@ public class Administrador_QTE : MonoBehaviour
     void Start()
     {
         // Buscamos al jugador y sus componentes en la escena automáticamente
-        playerScript = FindFirstObjectByType<PlayerActions>();
-        if (playerScript != null)
+        player = FindFirstObjectByType<PlayerActions>();
+        if (player != null)
         {
-            playerRb = playerScript.GetComponent<Rigidbody2D>();
+            playerRb = player.GetComponent<Rigidbody2D>();
         }
 
         delayTimer = timeBetweenQTE;
@@ -50,7 +50,7 @@ public class Administrador_QTE : MonoBehaviour
         else
         {
             // Forzamos el congelamiento absoluto desactivando el script del jugador y frenando su física
-            if (playerScript != null) playerScript.enabled = false;
+            if (player != null) player.SetCurrentSpeed(0);
             if (playerRb != null) playerRb.linearVelocity = Vector2.zero;
 
             ManejarModoQTE();
@@ -67,13 +67,13 @@ public class Administrador_QTE : MonoBehaviour
 
     void ActivarQTE()
     {
-        if (playerScript == null) return;
+        if (player == null) return;
 
         qteActive = true;
         timeToCompleteTimer = timeToComplete;
 
         // Guardamos la posición exacta antes del QTE para el reinicio
-        savePrevPlayerPosition = playerScript.transform.position;
+        savePrevPlayerPosition = player.transform.position;
 
         // Elegir flecha al azar
         int indiceAleatorio = UnityEngine.Random.Range(0, arrows.Length);
@@ -126,7 +126,7 @@ public class Administrador_QTE : MonoBehaviour
             arrowText.gameObject.SetActive(false);
 
         // Devolvemos el control al script del jugador de forma segura
-        if (playerScript != null) playerScript.enabled = true;
+        if (player != null) player.enabled = true;
 
         UnityEngine.Debug.Log("¡QTE Correcto! Continuando juego.");
     }
@@ -142,10 +142,10 @@ public class Administrador_QTE : MonoBehaviour
         UnityEngine.Debug.Log("¡QTE Fallado! El jugador muere y reinicia en el lugar.");
 
         // Devolvemos el control, lo teletransportamos a donde empezó el QTE y frenamos su inercia
-        if (playerScript != null)
+        if (player != null)
         {
-            playerScript.transform.position = startPoint.transform.position;
-            playerScript.enabled = true;
+            player.transform.position = startPoint.transform.position;
+            player.enabled = true;
         }
         if (playerRb != null)
         {

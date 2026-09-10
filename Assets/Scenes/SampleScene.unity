@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c88b1ecba5f0d5f48a2a460adc141fe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraMovement
-  player: {fileID: 0}
+  player: {fileID: 1831038083}
 --- !u!1 &542785258
 GameObject:
   m_ObjectHideFlags: 0
@@ -5925,10 +5925,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14a7859bce0eaa54e98adbe02441e263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameUI
-  jumpKey: {fileID: 0}
-  dashKey: {fileID: 0}
-  crouchKey: {fileID: 0}
-  player: {fileID: 0}
 --- !u!114 &1952397639
 MonoBehaviour:
   m_ObjectHideFlags: 0
