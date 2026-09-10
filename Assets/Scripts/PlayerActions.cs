@@ -290,9 +290,18 @@ public class PlayerActions : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Floor"))
         {
-            isGrounded = true;
-            jumpsRemaining = maxJumps;
+           
+            Vector2 puntoContacto = collision.GetContact(0).point;
+            Vector2 centroCollider = (Vector2)transform.position + boxCollider.offset;
+
+            
+            if (puntoContacto.y < centroCollider.y)
+            {
+                isGrounded = true;
+                jumpsRemaining = maxJumps;
+            }
         }
+
 
         if (collision.gameObject.CompareTag("Obstacle"))
         {
