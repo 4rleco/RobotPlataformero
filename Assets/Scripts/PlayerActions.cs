@@ -8,6 +8,7 @@ public class PlayerActions : MonoBehaviour
     private Rigidbody2D rb;
 
     [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float obstacleBounce = -1;
     [SerializeField] private bool isGrounded;
 
     [SerializeField] private int maxJumps = 2;
@@ -323,7 +324,7 @@ public class PlayerActions : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            currentSpeed *= -1.5f;
+            currentSpeed *= obstacleBounce;
         }
 
         if (collision.gameObject.CompareTag("Finish"))
