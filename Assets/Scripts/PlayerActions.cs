@@ -103,9 +103,7 @@ public class PlayerActions : MonoBehaviour
         if (playerDied)
         {
             OnPlayerDied();
-            return;
         }
-
         transform.Translate(new Vector3(1 * currentSpeed * Time.deltaTime, 0, 0));
 
         if (isDashing) return;
@@ -160,10 +158,6 @@ public class PlayerActions : MonoBehaviour
 
         currentKeyTimer -= Time.deltaTime;
 
-        screenRelativePosition = Camera.main.WorldToViewportPoint(transform.position);
-
-        if (screenRelativePosition.y < 0)
-            playerDied = true;
     }
 
     // Método modificado para elegir una tecla aleatoria de un array específico
@@ -307,14 +301,16 @@ public class PlayerActions : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("DeathBox"))
+        {
+            playerDied = true;
+            rb.linearVelocity = Vector2.zero;
+            OnPlayerDied();
+        }
+        else if (collision.gameObject.CompareTag("Floor"))
+        {
             Vector2 contactPoint = collision.GetContact(0).point;
             Vector2 colliderCenter = (Vector2)transform.position + boxCollider.offset;
-
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-
-
-
             if (contactPoint.y < colliderCenter.y)
             {
                 isGrounded = true;
@@ -325,7 +321,8 @@ public class PlayerActions : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-           
+            Vector2 contactPoint = collision.GetContact(0).point;
+            Vector2 colliderCenter = (Vector2)transform.position + boxCollider.offset;
             if (contactPoint.y >= colliderCenter.y - (boxCollider.size.y / 2f))
             {
                 currentSpeed *= obstacleBounce;
@@ -384,6 +381,7 @@ public class PlayerActions : MonoBehaviour
     private void OnPlayerDied()
     {
         transform.position = startPoint.transform.position;
+        playerDied = false;
     }
 
     public KeyCode GetJumpKey()
