@@ -3,6 +3,7 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private PlayerActions player;
+    [SerializeField] private float offsetX = 0f; 
 
     private float initialPosX;
 
@@ -20,6 +21,6 @@ public class CameraMovement : MonoBehaviour
             transform.position = new Vector3(initialPosX, transform.position.y, transform.position.z);
             player.SetPlayerDied(false);
         }
-        transform.position = new Vector3(transform.position.x + (player.GetCurrentSpeed() * Time.deltaTime), transform.position.y, transform.position.z);        
+        transform.position = new Vector3(player.transform.position.x + offsetX, transform.position.y, transform.position.z);
     }
 }

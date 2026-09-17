@@ -565,6 +565,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraMovement
   player: {fileID: 1831038083}
+  offsetX: 10.5
 --- !u!1 &542785258
 GameObject:
   m_ObjectHideFlags: 0
@@ -5388,7 +5389,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.88166964, y: 0.2204169}
+  m_Offset: {x: 0.7562288, y: -1.9795115}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -5398,7 +5399,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 3.6450074, y: 6.2270393}
+  m_Size: {x: 1.9576013, y: 1.8271824}
   m_EdgeRadius: 0
 --- !u!114 &1831038083
 MonoBehaviour:
@@ -5930,6 +5931,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14a7859bce0eaa54e98adbe02441e263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameUI
+  jumpKey: {fileID: 0}
+  dashKey: {fileID: 0}
+  crouchKey: {fileID: 0}
+  player: {fileID: 0}
 --- !u!114 &1952397639
 MonoBehaviour:
   m_ObjectHideFlags: 0
