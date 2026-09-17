@@ -1,8 +1,9 @@
+using System; 
 public static class Version 
 { 
-    private const string versionNumber = "v0.0.2"; 
+    private const String versionNumber = "v0.0.2"; 
  
-    public static string GetVersionNumber() 
+    public static String GetVersionNumber() 
     { 
         return versionNumber; 
     } 

@@ -6,6 +6,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI jumpKey;
     [SerializeField] private TextMeshProUGUI dashKey;
     [SerializeField] private TextMeshProUGUI crouchKey;
+    [SerializeField] private TextMeshProUGUI versionNumber;
 
     [SerializeField] private PlayerActions player;
 
@@ -14,5 +15,6 @@ public class GameUI : MonoBehaviour
         jumpKey.text = "Jump Key: " + player.GetJumpKey();
         dashKey.text = "Dash Key: " + player.GetDashKey();
         crouchKey.text = "Crouch Key: " + player.GetCrouchKey();
+        versionNumber.text = Version.GetVersionNumber();
     }
 }
