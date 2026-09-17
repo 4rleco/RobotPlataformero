@@ -156,6 +156,11 @@ public class PlayerActions : MonoBehaviour
         if (currentSpeed < speed)
             currentSpeed += 0.1f;
 
+        if(Input.GetKeyDown(KeyCode.F5))
+        {
+            PlayerReset();
+        }
+
         currentKeyTimer -= Time.deltaTime;
 
     }
@@ -382,6 +387,12 @@ public class PlayerActions : MonoBehaviour
     {
         transform.position = startPoint.transform.position;
         playerDied = false;
+    }
+
+    private void PlayerReset()
+    {
+        transform.position = startPoint.transform.position;
+        Time.timeScale = 1;
     }
 
     public KeyCode GetJumpKey()
