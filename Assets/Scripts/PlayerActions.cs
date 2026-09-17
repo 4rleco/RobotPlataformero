@@ -307,11 +307,12 @@ public class PlayerActions : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+            Vector2 contactPoint = collision.GetContact(0).point;
+            Vector2 colliderCenter = (Vector2)transform.position + boxCollider.offset;
+
         if (collision.gameObject.CompareTag("Floor"))
         {
 
-            Vector2 contactPoint = collision.GetContact(0).point;
-            Vector2 colliderCenter = (Vector2)transform.position + boxCollider.offset;
 
 
             if (contactPoint.y < colliderCenter.y)
@@ -324,7 +325,11 @@ public class PlayerActions : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            currentSpeed *= obstacleBounce;
+           
+            if (contactPoint.y >= colliderCenter.y - (boxCollider.size.y / 2f))
+            {
+                currentSpeed *= obstacleBounce;
+            }
         }
 
         if (collision.gameObject.CompareTag("Finish"))
