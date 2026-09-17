@@ -1,0 +1,6 @@
+[merge]
+    tool = unityyamlmerge
+
+[mergetool "unityyamlmerge"]
+    trustExitCode = true
+    cmd = "tools/unityyamlmerge.bat" "$BASE" "$REMOTE" "$LOCAL" "$MERGED"
