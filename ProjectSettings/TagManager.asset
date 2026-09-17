@@ -6,7 +6,7 @@ TagManager:
   tags:
   - Floor
   - Obstacle
-  - DeathBox
+  - MortalObstacle
   layers:
   - Default
   - TransparentFX

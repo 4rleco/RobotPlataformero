@@ -306,7 +306,7 @@ public class PlayerActions : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("DeathBox"))
+        if (collision.gameObject.CompareTag("MortalObstacle"))
         {
             playerDied = true;
             rb.linearVelocity = Vector2.zero;
