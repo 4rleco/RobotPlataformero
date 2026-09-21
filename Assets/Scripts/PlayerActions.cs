@@ -156,7 +156,7 @@ public class PlayerActions : MonoBehaviour
         if (currentSpeed < speed)
             currentSpeed += 0.1f;
 
-        if(Input.GetKeyDown(KeyCode.F5))
+        if (Input.GetKeyDown(KeyCode.F5))
         {
             PlayerReset();
         }
