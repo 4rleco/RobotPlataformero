@@ -11309,6 +11309,7 @@ MonoBehaviour:
   obstacleBounce: -1.2
   isGrounded: 0
   maxJumps: 1
+  animator: {fileID: 64302114}
   startPoint: {fileID: 699640787}
   endPoint: {fileID: 1850833092}
   speed: 10

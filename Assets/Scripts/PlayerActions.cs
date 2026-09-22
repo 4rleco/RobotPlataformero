@@ -13,6 +13,7 @@ public class PlayerActions : MonoBehaviour
 
     [SerializeField] private int maxJumps = 2;
     private int jumpsRemaining;
+    [SerializeField] private Animator animator;
 
     [Header("Start")]
     [SerializeField] private GameObject startPoint;
@@ -85,6 +86,7 @@ public class PlayerActions : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        animator = GetComponentInChildren<Animator>();
 
         if (boxCollider != null)
         {
@@ -103,6 +105,7 @@ public class PlayerActions : MonoBehaviour
         if (playerDied)
         {
             OnPlayerDied();
+           
         }
         transform.Translate(new Vector3(1 * currentSpeed * Time.deltaTime, 0, 0));
 
@@ -130,6 +133,12 @@ public class PlayerActions : MonoBehaviour
 
             jumpsRemaining--;
             isGrounded = false;
+
+            if (animator != null)
+            {
+                animator.SetBool("isGrounded", isGrounded);
+
+            }
         }
 
         // --- DASH (No se permite si está agachado) ---
@@ -162,6 +171,11 @@ public class PlayerActions : MonoBehaviour
         }
 
         currentKeyTimer -= Time.deltaTime;
+
+        if (animator != null)
+        {
+            animator.SetBool("isGrounded", isGrounded);
+        }
 
     }
 
