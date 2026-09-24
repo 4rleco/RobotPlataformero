@@ -5,7 +5,7 @@ public class Administrador_QTE : MonoBehaviour
 {
     [Header("Configuración de Tiempos")]
     [SerializeField] private float timeBetweenQTE = 20f;
-    [SerializeField] private float timeToComplete = 2.5f;
+    [SerializeField] private float timeToComplete = 10.0f;
 
     [Header("Referencias UI (TextMeshPro)")]
     [SerializeField] private TextMeshProUGUI arrowText;
@@ -17,17 +17,20 @@ public class Administrador_QTE : MonoBehaviour
     private KeyCode correctKey;
     private Vector2 savePrevPlayerPosition;
 
-    // Guardamos las referencias de los componentes del jugador por fuera
+   
     private PlayerActions player;
     private Rigidbody2D playerRb;
 
-    // Flechas direccionales para el QTE
+    
     private KeyCode[] arrows = { KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow };
     private string[] arrowsText = { "PRESIONÁ: ↑ (ARRIBA)", "PRESIONÁ: ↓ (ABAJO)", "PRESIONÁ: ← (IZQUIERDA)", "PRESIONÁ: → (DERECHA)" };
 
+    
+    private string currentArrowBaseText;
+
     void Start()
     {
-        // Buscamos al jugador y sus componentes en la escena automáticamente
+      
         player = FindFirstObjectByType<PlayerActions>();
         if (player != null)
         {
@@ -48,7 +51,7 @@ public class Administrador_QTE : MonoBehaviour
         }
         else
         {
-            // Forzamos el congelamiento absoluto desactivando el script del jugador y frenando su física
+            
             if (player != null) player.SetCurrentSpeed(0);
             if (playerRb != null) playerRb.linearVelocity = Vector2.zero;
 
@@ -58,6 +61,7 @@ public class Administrador_QTE : MonoBehaviour
 
     void NormalModeHandler()
     {
+        if(!player.isPaused)
         delayTimer -= Time.deltaTime;
 
         if (delayTimer <= 0)
@@ -71,17 +75,19 @@ public class Administrador_QTE : MonoBehaviour
         qteActive = true;
         timeToCompleteTimer = timeToComplete;
 
-        // Guardamos la posición exacta antes del QTE para el reinicio
+       
         savePrevPlayerPosition = player.transform.position;
 
-        // Elegir flecha al azar
+       
         int randomIndex = UnityEngine.Random.Range(0, arrows.Length);
         correctKey = arrows[randomIndex];
 
-        // Mostrar texto
+       
+        currentArrowBaseText = arrowsText[randomIndex];
+
+       
         if (arrowText != null)
         {
-            arrowText.text = arrowsText[randomIndex];
             arrowText.color = Color.yellow;
             arrowText.gameObject.SetActive(true);
         }
@@ -90,6 +96,24 @@ public class Administrador_QTE : MonoBehaviour
     void QTEHandler()
     {
         timeToCompleteTimer -= Time.deltaTime;
+
+       
+        int segundosRestantes = Mathf.CeilToInt(timeToCompleteTimer);
+
+        if (arrowText != null)
+        {
+           
+            if (timeToCompleteTimer <= 3.0f)
+            {
+                arrowText.color = Color.red;
+            }
+            else
+            {
+                arrowText.color = Color.yellow; 
+            }
+
+            arrowText.text = $"{currentArrowBaseText} [{segundosRestantes}s]";
+        }
 
         if (timeToCompleteTimer <= 0)
         {
@@ -137,7 +161,7 @@ public class Administrador_QTE : MonoBehaviour
 
         UnityEngine.Debug.Log("¡QTE Fallado! El jugador muere y reinicia en el lugar.");
 
-        // Devolvemos el control, lo teletransportamos a donde empezó el QTE y frenamos su inercia
+       
         if (player != null)
         {
             player.SetPlayerDied(true);
@@ -146,5 +170,11 @@ public class Administrador_QTE : MonoBehaviour
         {
             playerRb.linearVelocity = Vector2.zero;
         }
+
+    }
+
+    public bool GetIsActive()
+    {
+        return qteActive;
     }
 }

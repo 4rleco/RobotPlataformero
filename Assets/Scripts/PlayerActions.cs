@@ -7,12 +7,16 @@ public class PlayerActions : MonoBehaviour
 {
     private Rigidbody2D rb;
 
+    [SerializeField] private bool isGrounded;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Administrador_QTE qte;
+
+    [Header("Jump")]
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float obstacleBounce = -1;
-    [SerializeField] private bool isGrounded;
-
     [SerializeField] private int maxJumps = 2;
     private int jumpsRemaining;
+
 
     [Header("Start")]
     [SerializeField] private GameObject startPoint;
@@ -34,6 +38,7 @@ public class PlayerActions : MonoBehaviour
     private float dashTimer = 0f;
     private bool isDashing = false;
 
+    public bool isPaused = false;
 
     [Header("Slide")]
     [SerializeField] private float heightColliderMultiplier = 0.5f;
@@ -66,6 +71,7 @@ public class PlayerActions : MonoBehaviour
     private bool isCrouching = false;
     private bool wantsToStandUp = false;
     private bool playerDied = false;
+    private bool playerWin = false;
     private BoxCollider2D boxCollider;
     private Vector2 colliderOriginalSize;
     private Vector2 colliderOriginalOffset;
@@ -85,6 +91,7 @@ public class PlayerActions : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        animator = GetComponentInChildren<Animator>();
 
         if (boxCollider != null)
         {
@@ -100,69 +107,96 @@ public class PlayerActions : MonoBehaviour
 
     void Update()
     {
-        if (playerDied)
+        if (!isPaused)
         {
-            OnPlayerDied();
-        }
-        transform.Translate(new Vector3(1 * currentSpeed * Time.deltaTime, 0, 0));
+            if (playerDied)
+            {
+                OnPlayerDied();
 
-        if (isDashing) return;
-        // --- LÓGICA DE AGACHARSE ---
-        if (Input.GetKeyDown(crouchKey) && isGrounded)
+            }
+            transform.Translate(new Vector3(1 * currentSpeed * Time.deltaTime, 0, 0));
+
+            if (!qte.GetIsActive())
+            {
+                if (isDashing) return;
+                // --- LÓGICA DE AGACHARSE ---
+                if (Input.GetKeyDown(crouchKey) && isGrounded)
+                {
+                    Slide();
+                }
+                else if (Input.GetKeyUp(crouchKey) && isCrouching)
+                {
+                    wantsToStandUp = true;
+                }
+
+                if (wantsToStandUp && isCrouching)
+                {
+                    TryToStandUp();
+                }
+
+                // --- SALTO (No se permite si está agachado) --
+                if (Input.GetKeyDown(jumpKey) && jumpsRemaining > 0)
+                {
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+                    rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+                    jumpsRemaining--;
+                    isGrounded = false;
+
+                    if (animator != null)
+                    {
+                        animator.SetBool("isGrounded", isGrounded);
+
+                    }
+                }
+
+                // --- DASH (No se permite si está agachado) ---
+                if (Input.GetKeyDown(dashKey) && !isCrouching && canDash && currentSpeed > 0)
+                {
+                    StartCoroutine(DashRoutine());
+                }
+                if (!canDash)
+                {
+                    dashTimer -= Time.deltaTime;
+                }
+                if (dashTimer < 0 && !canDash && isGrounded)
+                {
+                    canDash = true;
+                }
+
+                if (currentKeyTimer <= 0.0f)
+                {
+                    SetRandKey();
+
+                    currentKeyTimer += keyTimer;
+                }
+
+                if (currentSpeed < speed)
+                    currentSpeed += 0.1f;
+
+                if (Input.GetKeyDown(KeyCode.F5))
+                {
+                    PlayerReset();
+                }
+
+                currentKeyTimer -= Time.deltaTime;
+
+                if (animator != null)
+                {
+                    animator.SetBool("isGrounded", isGrounded);
+                }
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
         {
-            Slide();
+            isPaused = true;
+            Time.timeScale = 0.0f;
         }
-        else if (Input.GetKeyUp(crouchKey) && isCrouching)
+        else if (Input.GetKeyDown(KeyCode.Escape))
         {
-            wantsToStandUp = true;
+            isPaused = false;
+            Time.timeScale = 1.0f;
         }
-
-        if (wantsToStandUp && isCrouching)
-        {
-            TryToStandUp();
-        }
-
-        // --- SALTO (No se permite si está agachado) --
-        if (Input.GetKeyDown(jumpKey) && jumpsRemaining > 0)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
-            jumpsRemaining--;
-            isGrounded = false;
-        }
-
-        // --- DASH (No se permite si está agachado) ---
-        if (Input.GetKeyDown(dashKey) && !isCrouching && canDash && currentSpeed > 0)
-        {
-            StartCoroutine(DashRoutine());
-        }
-        if (!canDash)
-        {
-            dashTimer -= Time.deltaTime;
-        }
-        if (dashTimer < 0 && !canDash && isGrounded)
-        {
-            canDash = true;
-        }
-
-        if (currentKeyTimer <= 0.0f)
-        {
-            SetRandKey();
-
-            currentKeyTimer += keyTimer;
-        }
-
-        if (currentSpeed < speed)
-            currentSpeed += 0.1f;
-
-        if (Input.GetKeyDown(KeyCode.F5))
-        {
-            PlayerReset();
-        }
-
-        currentKeyTimer -= Time.deltaTime;
-
     }
 
     // Método modificado para elegir una tecla aleatoria de un array específico
@@ -336,7 +370,7 @@ public class PlayerActions : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Finish"))
         {
-            Time.timeScale = 0;
+            playerWin = true;
         }
     }
 
@@ -424,8 +458,24 @@ public class PlayerActions : MonoBehaviour
         return playerDied;
     }
 
+    public void SetPlayerWin(bool win)
+    {
+       playerWin = win;
+    }
+
+    public bool GetPlayerWin()
+    {
+        return playerWin;
+    }
+
     public void SetPlayerDied(bool died)
     {
         playerDied = died;
+    }
+
+    public float GetDashCooldownTimer()
+    {
+        if (canDash) return 0f;
+        return dashTimer;
     }
 }
