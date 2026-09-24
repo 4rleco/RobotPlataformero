@@ -461,4 +461,10 @@ public class PlayerActions : MonoBehaviour
     {
         playerDied = died;
     }
+
+    public float GetDashCooldownTimer()
+    {
+        if (canDash) return 0f;
+        return dashTimer;
+    }
 }

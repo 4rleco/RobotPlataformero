@@ -37,7 +37,19 @@ public class GameUI : MonoBehaviour
         versionNumber.text = Version.GetVersionNumber();
 
         pauseMenu.SetActive(player.isPaused);
-        
+
+        float cooldownRestante = player.GetDashCooldownTimer();
+        if (cooldownRestante > 0)
+        {
+         
+            dashKey.text = "Dash Key: " + player.GetDashKey() + " [ " + cooldownRestante.ToString("F1") + "s]";
+        }
+        else
+        {
+            
+            dashKey.text = "Dash Key: " + player.GetDashKey() + " [READY]";
+        }
+
         if (lastJump != KeyCode.None && player.GetJumpKey() != lastJump) StartCoroutine(FlashRed(jumpKey));
         if (lastDash != KeyCode.None && player.GetDashKey() != lastDash) StartCoroutine(FlashRed(dashKey));
         if (lastCrouch != KeyCode.None && player.GetCrouchKey() != lastCrouch) StartCoroutine(FlashRed(crouchKey));
