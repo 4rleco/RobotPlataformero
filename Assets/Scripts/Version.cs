@@ -1,9 +1,16 @@
-using System; 
-public static class Version 
+using System;
+using UnityEngine;
+
+public class Version :MonoBehaviour
 { 
-    private const String versionNumber = "v0.1.1"; 
- 
-    public static String GetVersionNumber() 
+    private String versionNumber;
+
+    private void Awake()
+    {
+        versionNumber = Application.version;
+    }
+
+    public String GetVersionNumber() 
     { 
         return versionNumber; 
     } 
