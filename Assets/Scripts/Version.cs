@@ -9,8 +9,8 @@ public class Version :MonoBehaviour
     {
         versionNumber = Application.version;
     }
-
-    public String GetVersionNumber() 
+ 
+    public static String GetVersionNumber() 
     { 
         return versionNumber; 
     } 
