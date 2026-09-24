@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameUI : MonoBehaviour
 {
@@ -16,5 +17,15 @@ public class GameUI : MonoBehaviour
         dashKey.text = "Dash Key: " + player.GetDashKey();
         crouchKey.text = "Crouch Key: " + player.GetCrouchKey();
         versionNumber.text = Version.GetVersionNumber();
+    }
+
+    public void Reset()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void Resume()
+    {
+        Time.timeScale = 1.0f;
     }
 }
