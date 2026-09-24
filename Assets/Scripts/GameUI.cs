@@ -56,8 +56,9 @@ public class GameUI : MonoBehaviour
         textMesh.color = Color.white;
     }
 
-    public void Reset()
+    public void ResetGame()
     {
+        Time.timeScale = 1.0f;
         SceneManager.LoadScene(0);
     }
 
