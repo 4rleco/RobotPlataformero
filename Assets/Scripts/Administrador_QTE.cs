@@ -147,4 +147,9 @@ public class Administrador_QTE : MonoBehaviour
             playerRb.linearVelocity = Vector2.zero;
         }
     }
+
+    public bool GetIsActive()
+    {
+        return qteActive;
+    }
 }

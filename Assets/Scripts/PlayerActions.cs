@@ -7,13 +7,16 @@ public class PlayerActions : MonoBehaviour
 {
     private Rigidbody2D rb;
 
+    [SerializeField] private bool isGrounded;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Administrador_QTE qte;
+
+    [Header("Jump")]
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float obstacleBounce = -1;
-    [SerializeField] private bool isGrounded;
-
     [SerializeField] private int maxJumps = 2;
     private int jumpsRemaining;
-    [SerializeField] private Animator animator;
+
 
     [Header("Start")]
     [SerializeField] private GameObject startPoint;
@@ -109,72 +112,75 @@ public class PlayerActions : MonoBehaviour
         }
         transform.Translate(new Vector3(1 * currentSpeed * Time.deltaTime, 0, 0));
 
-        if (isDashing) return;
-        // --- LÓGICA DE AGACHARSE ---
-        if (Input.GetKeyDown(crouchKey) && isGrounded)
+        if (!qte.GetIsActive())
         {
-            Slide();
-        }
-        else if (Input.GetKeyUp(crouchKey) && isCrouching)
-        {
-            wantsToStandUp = true;
-        }
+            if (isDashing) return;
+            // --- LÓGICA DE AGACHARSE ---
+            if (Input.GetKeyDown(crouchKey) && isGrounded)
+            {
+                Slide();
+            }
+            else if (Input.GetKeyUp(crouchKey) && isCrouching)
+            {
+                wantsToStandUp = true;
+            }
 
-        if (wantsToStandUp && isCrouching)
-        {
-            TryToStandUp();
-        }
+            if (wantsToStandUp && isCrouching)
+            {
+                TryToStandUp();
+            }
 
-        // --- SALTO (No se permite si está agachado) --
-        if (Input.GetKeyDown(jumpKey) && jumpsRemaining > 0)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            // --- SALTO (No se permite si está agachado) --
+            if (Input.GetKeyDown(jumpKey) && jumpsRemaining > 0)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
-            jumpsRemaining--;
-            isGrounded = false;
+                jumpsRemaining--;
+                isGrounded = false;
+
+                if (animator != null)
+                {
+                    animator.SetBool("isGrounded", isGrounded);
+
+                }
+            }
+
+            // --- DASH (No se permite si está agachado) ---
+            if (Input.GetKeyDown(dashKey) && !isCrouching && canDash && currentSpeed > 0)
+            {
+                StartCoroutine(DashRoutine());
+            }
+            if (!canDash)
+            {
+                dashTimer -= Time.deltaTime;
+            }
+            if (dashTimer < 0 && !canDash && isGrounded)
+            {
+                canDash = true;
+            }
+
+            if (currentKeyTimer <= 0.0f)
+            {
+                SetRandKey();
+
+                currentKeyTimer += keyTimer;
+            }
+
+            if (currentSpeed < speed)
+                currentSpeed += 0.1f;
+
+            if (Input.GetKeyDown(KeyCode.F5))
+            {
+                PlayerReset();
+            }
+
+            currentKeyTimer -= Time.deltaTime;
 
             if (animator != null)
             {
                 animator.SetBool("isGrounded", isGrounded);
-
-            }
-        }
-
-        // --- DASH (No se permite si está agachado) ---
-        if (Input.GetKeyDown(dashKey) && !isCrouching && canDash && currentSpeed > 0)
-        {
-            StartCoroutine(DashRoutine());
-        }
-        if (!canDash)
-        {
-            dashTimer -= Time.deltaTime;
-        }
-        if (dashTimer < 0 && !canDash && isGrounded)
-        {
-            canDash = true;
-        }
-
-        if (currentKeyTimer <= 0.0f)
-        {
-            SetRandKey();
-
-            currentKeyTimer += keyTimer;
-        }
-
-        if (currentSpeed < speed)
-            currentSpeed += 0.1f;
-
-        if (Input.GetKeyDown(KeyCode.F5))
-        {
-            PlayerReset();
-        }
-
-        currentKeyTimer -= Time.deltaTime;
-
-        if (animator != null)
-        {
-            animator.SetBool("isGrounded", isGrounded);
+            } 
         }
 
     }
