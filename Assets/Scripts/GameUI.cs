@@ -12,6 +12,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI versionNumber;
 
     [SerializeField] private PlayerActions player;
+    [SerializeField] private Version version;
 
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject winMenu;
@@ -34,7 +35,7 @@ public class GameUI : MonoBehaviour
         jumpKey.text = "Jump Key: " + player.GetJumpKey();
         dashKey.text = "Dash Key: " + player.GetDashKey();
         crouchKey.text = "Crouch Key: " + player.GetCrouchKey();
-        versionNumber.text = Version.GetVersionNumber();
+        versionNumber.text = version.GetVersionNumber();
 
         pauseMenu.SetActive(player.isPaused);
 
@@ -58,6 +59,12 @@ public class GameUI : MonoBehaviour
         lastJump = player.GetJumpKey();
         lastDash = player.GetDashKey();
         lastCrouch = player.GetCrouchKey();
+
+        if(player.GetPlayerWin())
+        {
+            Time.timeScale = 0.0f;
+            winMenu.SetActive(true);
+        }
     }
 
     
@@ -66,6 +73,14 @@ public class GameUI : MonoBehaviour
         textMesh.color = Color.red;
         yield return new WaitForSeconds(1.0f);
         textMesh.color = Color.white;
+    }
+
+    public void NextLevel()
+    {
+        SceneManager.LoadScene(1);
+        Time.timeScale = 1.0f;
+        winMenu.SetActive(false);
+        player.SetPlayerWin(false);
     }
 
     public void ResetGame()

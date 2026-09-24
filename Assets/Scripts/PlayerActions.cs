@@ -71,6 +71,7 @@ public class PlayerActions : MonoBehaviour
     private bool isCrouching = false;
     private bool wantsToStandUp = false;
     private bool playerDied = false;
+    private bool playerWin = false;
     private BoxCollider2D boxCollider;
     private Vector2 colliderOriginalSize;
     private Vector2 colliderOriginalOffset;
@@ -369,7 +370,7 @@ public class PlayerActions : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Finish"))
         {
-            Time.timeScale = 0;
+            playerWin = true;
         }
     }
 
@@ -455,6 +456,16 @@ public class PlayerActions : MonoBehaviour
     public bool GetPlayerDied()
     {
         return playerDied;
+    }
+
+    public void SetPlayerWin(bool win)
+    {
+       playerWin = win;
+    }
+
+    public bool GetPlayerWin()
+    {
+        return playerWin;
     }
 
     public void SetPlayerDied(bool died)
