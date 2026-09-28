@@ -12,7 +12,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI versionNumber;
 
     [SerializeField] private PlayerActions player;
-    [SerializeField] private Version version;
+    
 
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject winMenu;
@@ -25,6 +25,7 @@ public class GameUI : MonoBehaviour
     private void Start()
     {
         pauseMenu.SetActive(false);
+        versionNumber.text = GameVersion.GetVersionNumber();
         winMenu.SetActive(false);
         loseMenu.SetActive(false);
     }
@@ -35,7 +36,6 @@ public class GameUI : MonoBehaviour
         jumpKey.text = "Jump Key: " + player.GetJumpKey();
         dashKey.text = "Dash Key: " + player.GetDashKey();
         crouchKey.text = "Crouch Key: " + player.GetCrouchKey();
-        versionNumber.text = version.GetVersionNumber();
 
         pauseMenu.SetActive(player.isPaused);
 

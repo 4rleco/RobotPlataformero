@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Version :MonoBehaviour
+public class GameVersion :MonoBehaviour
 { 
     private String versionNumber;
 
@@ -12,6 +12,6 @@ public class Version :MonoBehaviour
  
     public static String GetVersionNumber() 
     { 
-        return versionNumber; 
+        return Application.version; 
     } 
 } 
