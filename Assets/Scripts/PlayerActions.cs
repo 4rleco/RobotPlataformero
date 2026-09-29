@@ -103,10 +103,20 @@ public class PlayerActions : MonoBehaviour
 
         currentSpeed = speed;
         currentKeyTimer = keyTimer;
+
+        if (animator != null)
+        {
+            animator.SetBool("isSliding", false);
+            animator.SetBool("isDashing", false);
+        }
     }
 
     void Update()
     {
+        if (animator != null)
+        {
+            animator.SetBool("isSliding", isCrouching);
+        }
         if (!isPaused)
         {
             if (playerDied)
@@ -116,6 +126,16 @@ public class PlayerActions : MonoBehaviour
             }
             transform.Translate(new Vector3(1 * currentSpeed * Time.deltaTime, 0, 0));
 
+            if (Input.GetKeyUp(crouchKey) && isCrouching)
+            {
+                wantsToStandUp = true;
+            }
+
+            if (wantsToStandUp && isCrouching)
+            {
+                TryToStandUp();
+            }
+
             if (!qte.GetIsActive())
             {
                 if (isDashing) return;
@@ -123,15 +143,6 @@ public class PlayerActions : MonoBehaviour
                 if (Input.GetKeyDown(crouchKey) && isGrounded)
                 {
                     Slide();
-                }
-                else if (Input.GetKeyUp(crouchKey) && isCrouching)
-                {
-                    wantsToStandUp = true;
-                }
-
-                if (wantsToStandUp && isCrouching)
-                {
-                    TryToStandUp();
                 }
 
                 // --- SALTO (No se permite si está agachado) --
@@ -238,6 +249,7 @@ public class PlayerActions : MonoBehaviour
                     crouchKey = GetRandKeyFromRow(bottomLine);
                 }
                 while (crouchKey == prevCrouch);
+                if (isCrouching) wantsToStandUp = true;
                 break;
         }
     }
@@ -290,6 +302,7 @@ public class PlayerActions : MonoBehaviour
 
         isDashing = true;
 
+        if (animator != null) animator.SetBool("isDashing", true);
         float directionX = Mathf.Sign(currentSpeed);
         Vector2 dasDirection = new Vector2(directionX, 0f);
 
@@ -334,6 +347,7 @@ public class PlayerActions : MonoBehaviour
 
         rb.gravityScale = originalGravity;
         isDashing = false;
+        if (animator != null) animator.SetBool("isDashing", false);
         canDash = false;
         dashTimer = dashCooldown;
     }
@@ -421,6 +435,11 @@ public class PlayerActions : MonoBehaviour
     {
         transform.position = startPoint.transform.position;
         playerDied = false;
+        if (animator != null)
+        {
+            animator.SetBool("isDashing", false);
+            animator.SetBool("isSliding", false);
+        }
     }
 
     private void PlayerReset()
@@ -460,7 +479,7 @@ public class PlayerActions : MonoBehaviour
 
     public void SetPlayerWin(bool win)
     {
-       playerWin = win;
+        playerWin = win;
     }
 
     public bool GetPlayerWin()
