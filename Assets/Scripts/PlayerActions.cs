@@ -175,7 +175,7 @@ public class PlayerActions : MonoBehaviour
                     canDash = true;
                 }
 
-                if (currentKeyTimer <= 0.0f)
+                if (currentKeyTimer <= 0.0f && !isCrouching)
                 {
                     SetRandKey();
 
@@ -252,7 +252,7 @@ public class PlayerActions : MonoBehaviour
                     crouchKey = GetRandKeyFromRow(bottomLine);
                 }
                 while (crouchKey == prevCrouch);
-                if (isCrouching) wantsToStandUp = true;
+                //if (isCrouching) wantsToStandUp = true;
                 break;
         }
     }
