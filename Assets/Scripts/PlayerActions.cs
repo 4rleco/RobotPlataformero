@@ -175,7 +175,7 @@ public class PlayerActions : MonoBehaviour
                     canDash = true;
                 }
 
-                if (currentKeyTimer <= 0.0f)
+                if (currentKeyTimer <= 0.0f && !isCrouching)
                 {
                     SetRandKey();
 
@@ -184,6 +184,8 @@ public class PlayerActions : MonoBehaviour
 
                 if (currentSpeed < speed)
                     currentSpeed += 0.1f;
+                else if (currentSpeed > speed)
+                    currentSpeed -= 0.1f;
 
 #if UNITY_EDITOR
                 if (Input.GetKeyDown(KeyCode.F5))
@@ -250,7 +252,7 @@ public class PlayerActions : MonoBehaviour
                     crouchKey = GetRandKeyFromRow(bottomLine);
                 }
                 while (crouchKey == prevCrouch);
-                if (isCrouching) wantsToStandUp = true;
+                //if (isCrouching) wantsToStandUp = true;
                 break;
         }
     }
@@ -382,7 +384,6 @@ public class PlayerActions : MonoBehaviour
                 currentSpeed *= obstacleBounce;
             }
         }
-
         if (collision.gameObject.CompareTag("Finish"))
         {
             playerWin = true;
