@@ -184,6 +184,8 @@ public class PlayerActions : MonoBehaviour
 
                 if (currentSpeed < speed)
                     currentSpeed += 0.1f;
+                else if (currentSpeed > speed)
+                    currentSpeed -= 0.1f;
 
 #if UNITY_EDITOR
                 if (Input.GetKeyDown(KeyCode.F5))
@@ -371,8 +373,6 @@ public class PlayerActions : MonoBehaviour
                 jumpsRemaining = maxJumps;
             }
         }
-
-
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             Vector2 contactPoint = collision.GetContact(0).point;
@@ -382,7 +382,6 @@ public class PlayerActions : MonoBehaviour
                 currentSpeed *= obstacleBounce;
             }
         }
-
         if (collision.gameObject.CompareTag("Finish"))
         {
             playerWin = true;
