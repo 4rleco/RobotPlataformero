@@ -185,11 +185,12 @@ public class PlayerActions : MonoBehaviour
                 if (currentSpeed < speed)
                     currentSpeed += 0.1f;
 
+#if UNITY_EDITOR
                 if (Input.GetKeyDown(KeyCode.F5))
                 {
                     PlayerReset();
                 }
-
+#endif
                 currentKeyTimer -= Time.deltaTime;
 
                 if (animator != null)
