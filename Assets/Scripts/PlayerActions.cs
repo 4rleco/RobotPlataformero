@@ -185,11 +185,12 @@ public class PlayerActions : MonoBehaviour
                 if (currentSpeed < speed)
                     currentSpeed += 0.1f;
 
+#if UNITY_EDITOR
                 if (Input.GetKeyDown(KeyCode.F5))
                 {
                     PlayerReset();
                 }
-
+#endif
                 currentKeyTimer -= Time.deltaTime;
 
                 if (animator != null)
@@ -371,11 +372,11 @@ public class PlayerActions : MonoBehaviour
             }
         }
 
-
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             Vector2 contactPoint = collision.GetContact(0).point;
             Vector2 colliderCenter = (Vector2)transform.position + boxCollider.offset;
+            
             if (contactPoint.y >= colliderCenter.y - (boxCollider.size.y / 2f))
             {
                 currentSpeed *= obstacleBounce;
