@@ -7,14 +7,14 @@ public class Train : MonoBehaviour
 
     [Header("Speed")]
     [SerializeField] private float speed = 5.0f;
-
-    private SpriteRenderer body;
+    private Vector3 inittialPos;
 
     private void Awake()
     {
         activator.OnActivateTrain += OnActivateTrain;
 
-        body = GetComponentInChildren<SpriteRenderer>();
+        inittialPos = transform.position;
+
         enabled = false;
     }
 
@@ -25,7 +25,14 @@ public class Train : MonoBehaviour
 
     private void Update()
     {
-        body.transform.position = new Vector3(body.transform.position.x - speed * Time.deltaTime, 0.0f, 0.0f);
+        transform.position = new Vector3(transform.position.x - speed * Time.deltaTime, 0.0f, 0.0f);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        transform.position = inittialPos;
+
+        enabled = false;
     }
 
     private void OnDestroy()

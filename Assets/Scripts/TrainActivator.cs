@@ -7,8 +7,6 @@ public class TrainActivator : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Entra");
-
         OnActivateTrain?.Invoke(true);
     }         
 }
