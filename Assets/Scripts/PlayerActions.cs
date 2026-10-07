@@ -143,6 +143,7 @@ public class PlayerActions : MonoBehaviour
                 if (Input.GetKeyDown(crouchKey) && isGrounded)
                 {
                     Slide();
+                    PlayerEvents.current.OnPlayerSlideTriggerClose(this);
                 }
 
                 // --- SALTO (No se permite si está agachado) --
@@ -159,12 +160,15 @@ public class PlayerActions : MonoBehaviour
                         animator.SetBool("isGrounded", isGrounded);
 
                     }
+                    PlayerEvents.current.OnPlayerJumpTriggerClose(this);
                 }
 
                 // --- DASH (No se permite si está agachado) ---
                 if (Input.GetKeyDown(dashKey) && !isCrouching && canDash && currentSpeed > 0)
                 {
                     StartCoroutine(DashRoutine());
+                    PlayerEvents.current.OnPlayerDashTriggerClose(this);
+                   
                 }
                 if (!canDash)
                 {
@@ -441,7 +445,9 @@ public class PlayerActions : MonoBehaviour
         {
             animator.SetBool("isDashing", false);
             animator.SetBool("isSliding", false);
+
         }
+        PlayerEvents.current.OnPlayerDeath(this);
     }
 
     private void PlayerReset()
