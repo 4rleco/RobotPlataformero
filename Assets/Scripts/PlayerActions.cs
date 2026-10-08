@@ -30,6 +30,8 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private LayerMask dashObstacleLayer; // Capa de los obstáculos que bloquean el Dash
     [SerializeField] private float wallOffset = 1f; // Distancia de seguridad para no quedar pegado dentro de la pared
     [SerializeField] private bool canDestroyObstacles = false;
+    private Coroutine dashCoroutine;
+    private float defaultGravity;
     private bool canDash = true;
     private float dashTimer = 0f;
     private bool isDashing = false;
@@ -86,6 +88,7 @@ public class PlayerActions : MonoBehaviour
         transform.position = startPoint.transform.position;
 
         rb = GetComponent<Rigidbody2D>();
+        defaultGravity = rb.gravityScale;
         boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponentInChildren<Animator>();
 
@@ -163,7 +166,7 @@ public class PlayerActions : MonoBehaviour
                 // --- DASH (No se permite si está agachado) ---
                 if (Input.GetKeyDown(dashKey) && !isCrouching && canDash && currentSpeed > 0)
                 {
-                    StartCoroutine(DashRoutine());
+                    dashCoroutine = StartCoroutine(DashRoutine());
 
                     PlayerEvents.current.OnPlayerDashTriggerClose(this);
 
@@ -324,34 +327,24 @@ public class PlayerActions : MonoBehaviour
             if (efectiveDistance < 0) efectiveDistance = 0;
         }
 
-        Vector2 finalPosition = (Vector2)transform.position + new Vector2(directionX * efectiveDistance, 0f);
-        Debug.Log(finalPosition.x);
-
-
-        float originalGravity = rb.gravityScale;
-        bool hitCollision = false;
+        float startX = transform.position.x;
+        float elapsed = 0f;
+        float maxTime = (efectiveDistance / dashSpeed) + 0.5f;
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
 
-        while (Vector2.SqrMagnitude((Vector2)transform.position - finalPosition) > 0.02f)
+        while (Mathf.Abs(transform.position.x - startX) < efectiveDistance
+               && currentSpeed > 0
+               && elapsed < maxTime)
         {
-            if (currentSpeed <= 0)
-            {
-                Debug.Log("entro al bucle");
-                hitCollision = true;
-                break;
-            }
-            transform.position = Vector2.MoveTowards(transform.position, finalPosition, dashSpeed * Time.deltaTime);
+            transform.position += new Vector3(directionX * dashSpeed * Time.deltaTime, 0f, 0f);
+            elapsed += Time.deltaTime;
             yield return null;
         }
 
-        Debug.Log("finalizando corrutina");
-
-        if (!hitCollision)
-            transform.position = finalPosition;
-
-        rb.gravityScale = originalGravity;
+        rb.gravityScale = defaultGravity;
         isDashing = false;
+        dashCoroutine = null;
         if (animator != null) animator.SetBool("isDashing", false);
         canDash = false;
         dashTimer = dashCooldown;
@@ -443,6 +436,15 @@ public class PlayerActions : MonoBehaviour
 
     private void OnPlayerDied()
     {
+        if (dashCoroutine != null)
+        {
+            StopCoroutine(dashCoroutine);
+            dashCoroutine = null;
+        }
+        isDashing = false;
+        rb.gravityScale = defaultGravity;
+        rb.linearVelocity = Vector2.zero;
+        currentSpeed = speed;
         transform.position = startPoint.transform.position;
         playerDied = false;
         if (animator != null)
