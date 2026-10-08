@@ -69,7 +69,7 @@ public class GameUI : MonoBehaviour
         if (player.GetPlayerWin())
         {
             Time.timeScale = 0.0f;
-            winMenu.SetActive(true);
+            NextLevel();
         }
     }
 
@@ -82,7 +82,7 @@ public class GameUI : MonoBehaviour
         textMesh.color = Color.white;
     }
 
-    public void NextLevel()
+    private void NextLevel()
     {
         int nextLevel = SceneManager.GetActiveScene().buildIndex + 1;
 
@@ -92,8 +92,6 @@ public class GameUI : MonoBehaviour
         }
 
         Time.timeScale = 1.0f;
-
-        winMenu.SetActive(false);
 
         player.SetPlayerWin(false);
     }

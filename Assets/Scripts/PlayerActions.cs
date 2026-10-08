@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class PlayerActions : MonoBehaviour
 {
@@ -20,9 +18,6 @@ public class PlayerActions : MonoBehaviour
     [Header("Start")]
     [SerializeField] private GameObject startPoint;
 
-    [Header("Finish")]
-    [SerializeField] private GameObject endPoint;
-
     [Header("Speed")]
     [SerializeField] private int speed = 10;
     private float currentSpeed;
@@ -33,10 +28,10 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float dashCooldown = 2.0f;
     [SerializeField] private LayerMask dashObstacleLayer; // Capa de los obstáculos que bloquean el Dash
     [SerializeField] private float wallOffset = 1f; // Distancia de seguridad para no quedar pegado dentro de la pared
+    [SerializeField] private bool canDestroyObstacles = false;
     private bool canDash = true;
     private float dashTimer = 0f;
     private bool isDashing = false;
-    private bool canDestroyObstacles = false;
 
     public bool isPaused = false;
 
@@ -378,7 +373,7 @@ public class PlayerActions : MonoBehaviour
             }
         }
 
-        if (isDashing && collision.gameObject.CompareTag("DestroyObstacle"))
+        if (isDashing && canDestroyObstacles && collision.gameObject.CompareTag("DestroyObstacle"))
         {
             Destroy(collision.gameObject);
         }
