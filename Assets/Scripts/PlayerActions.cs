@@ -17,7 +17,6 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private int maxJumps = 2;
     private int jumpsRemaining;
 
-
     [Header("Start")]
     [SerializeField] private GameObject startPoint;
 
@@ -37,6 +36,7 @@ public class PlayerActions : MonoBehaviour
     private bool canDash = true;
     private float dashTimer = 0f;
     private bool isDashing = false;
+    private bool canDestroyObstacles = false;
 
     public bool isPaused = false;
 
@@ -168,7 +168,7 @@ public class PlayerActions : MonoBehaviour
                 {
                     StartCoroutine(DashRoutine());
                     PlayerEvents.current.OnPlayerDashTriggerClose(this);
-                   
+
                 }
                 if (!canDash)
                 {
@@ -378,22 +378,28 @@ public class PlayerActions : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.CompareTag("Obstacle"))
+        if (isDashing && collision.gameObject.CompareTag("DestroyObstacle"))
+        {
+            Destroy(collision.gameObject);
+        }
+
+        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("DestroyObstacle"))
         {
             Vector2 contactPoint = collision.GetContact(0).point;
             Vector2 colliderCenter = (Vector2)transform.position + boxCollider.offset;
-            
+
             if (contactPoint.y >= colliderCenter.y - (boxCollider.size.y / 2f))
             {
                 currentSpeed *= obstacleBounce;
             }
         }
+
         if (collision.gameObject.CompareTag("Finish"))
         {
             playerWin = true;
         }
     }
-
+  
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
