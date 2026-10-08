@@ -7944,6 +7944,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1033156636658387027, guid: 214f5963290d9154b9bde6b63ae35098, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ResetGame
+      objectReference: {fileID: 0}
     - target: {fileID: 1364993090977895106, guid: 214f5963290d9154b9bde6b63ae35098, type: 3}
       propertyPath: m_Name
       value: GameUi
