@@ -7,20 +7,24 @@ public class PlayerEvents : MonoBehaviour
 {
     public static PlayerEvents current;
 
+    public event Action<PlayerActions> onJumpTutorialTriggerEnter;
+
+    public event Action<PlayerActions> onDashTutorialTriggerEnter;
+
+    public event Action<PlayerActions> onSlideTutorialTriggerEnter;
+
+    public event Action<PlayerActions> onPlayerJumpTriggerClose;
+
+    public event Action<PlayerActions> onPlayerDashTriggerClose;
+
+    public event Action<PlayerActions> onPlayerSlideTriggerClose;
+
+    public event Action<PlayerActions> onPlayerDeath;
 
     private void Awake()
     {
         current = this;
     }
-
-    public event Action<PlayerActions> onJumpTutorialTriggerEnter;
-    public event Action<PlayerActions> onDashTutorialTriggerEnter;
-    public event Action<PlayerActions> onSlideTutorialTriggerEnter;
-    public event Action<PlayerActions> onPlayerJumpTriggerClose;
-    public event Action<PlayerActions> onPlayerDashTriggerClose;
-    public event Action<PlayerActions> onPlayerSlideTriggerClose;
-    public event Action<PlayerActions> onPlayerDeath;
-
 
     public void OnJumpTutorialTriggerEnter(PlayerActions player)
     {
@@ -29,6 +33,7 @@ public class PlayerEvents : MonoBehaviour
             onJumpTutorialTriggerEnter.Invoke(player);
         }
     }
+
     public void OnDashTutorialTriggerEnter(PlayerActions player)
     {
         if (onDashTutorialTriggerEnter != null)
@@ -36,6 +41,7 @@ public class PlayerEvents : MonoBehaviour
             onDashTutorialTriggerEnter.Invoke(player);
         }
     }
+
     public void OnSlideTutorialTriggerEnter(PlayerActions player)
     {
         if (onSlideTutorialTriggerEnter != null)

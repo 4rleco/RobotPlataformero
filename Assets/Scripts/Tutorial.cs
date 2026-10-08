@@ -1,16 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Hint : MonoBehaviour
+public class Tutorial : MonoBehaviour
 {
 
     [SerializeField] private GameObject JumpTutorial;
+
     [SerializeField] private GameObject SlideTutorial;
+
     [SerializeField] private GameObject DashTutorial;
+
     [SerializeField] private GameObject dashTrigger;
+
     [SerializeField] private Image SlideCanva;
+
     [SerializeField] private Image DashCanva;
+
     [SerializeField] private Image JumpCanva;
+
     [SerializeField] private PlayerActions owner;
 
     void Start()
@@ -29,13 +36,14 @@ public class Hint : MonoBehaviour
 
         PlayerEvents.current.onPlayerDeath += OnPlayerDeath;
     }
+
     private void OnJumpOpen(PlayerActions player)
     {
         if (player != owner) return;
 
         JumpCanva.gameObject.SetActive(true);
-        DashCanva.gameObject.SetActive(false);
 
+        DashCanva.gameObject.SetActive(false);
     }
 
     private void OnJumpClose(PlayerActions player)
@@ -43,9 +51,8 @@ public class Hint : MonoBehaviour
         if (player != owner) return;
 
         JumpCanva.gameObject.SetActive(false);
-        
-
     }
+
     private void OnDashOpen(PlayerActions player)
     {
         if (player != owner) return;
@@ -57,18 +64,16 @@ public class Hint : MonoBehaviour
     private void OnDashClose(PlayerActions player)
     {
         if (player != owner) return;
-        DashCanva.gameObject.SetActive(false);
-      
 
+        DashCanva.gameObject.SetActive(false);
     }
+
     private void OnSlideOpen(PlayerActions player)
     {
       
         if (player != owner) return;
 
         SlideCanva.gameObject.SetActive(true);
-        
-
     }
 
     private void OnSlideClose(PlayerActions player)
@@ -77,8 +82,6 @@ public class Hint : MonoBehaviour
         if (player != owner) return;
 
         SlideCanva.gameObject.SetActive(false);
-       
-
     }
 
     private void OnPlayerDeath(PlayerActions player)
@@ -89,17 +92,22 @@ public class Hint : MonoBehaviour
             dashTrigger.SetActive(true);
 
         JumpCanva.gameObject.SetActive(false);
+
         DashCanva.gameObject.SetActive(false);
+
         SlideCanva.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
     {
         if (PlayerEvents.current == null) return;
+
         PlayerEvents.current.onJumpTutorialTriggerEnter -= OnJumpOpen;
+
         PlayerEvents.current.onDashTutorialTriggerEnter -= OnDashClose;
+
         PlayerEvents.current.onSlideTutorialTriggerEnter -= OnSlideClose;
+
         PlayerEvents.current.onPlayerDeath-=OnPlayerDeath;
     }
-
 }
