@@ -8,6 +8,7 @@ TagManager:
   - Obstacle
   - MortalObstacle
   - Train Activator
+  - DestroyObstacle
   layers:
   - Default
   - TransparentFX
