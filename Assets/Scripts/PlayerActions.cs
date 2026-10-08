@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerActions : MonoBehaviour
 {
@@ -117,8 +118,8 @@ public class PlayerActions : MonoBehaviour
             if (playerDied)
             {
                 OnPlayerDied();
-
             }
+
             transform.Translate(new Vector3(1 * currentSpeed * Time.deltaTime, 0, 0));
 
             if (Input.GetKeyUp(crouchKey) && isCrouching)
@@ -138,6 +139,7 @@ public class PlayerActions : MonoBehaviour
                 if (Input.GetKeyDown(crouchKey) && isGrounded)
                 {
                     Slide();
+
                     PlayerEvents.current.OnPlayerSlideTriggerClose(this);
                 }
 
@@ -153,8 +155,8 @@ public class PlayerActions : MonoBehaviour
                     if (animator != null)
                     {
                         animator.SetBool("isGrounded", isGrounded);
-
                     }
+
                     PlayerEvents.current.OnPlayerJumpTriggerClose(this);
                 }
 
@@ -162,6 +164,7 @@ public class PlayerActions : MonoBehaviour
                 if (Input.GetKeyDown(dashKey) && !isCrouching && canDash && currentSpeed > 0)
                 {
                     StartCoroutine(DashRoutine());
+
                     PlayerEvents.current.OnPlayerDashTriggerClose(this);
 
                 }
@@ -394,7 +397,7 @@ public class PlayerActions : MonoBehaviour
             playerWin = true;
         }
     }
-  
+
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
@@ -448,6 +451,7 @@ public class PlayerActions : MonoBehaviour
             animator.SetBool("isSliding", false);
 
         }
+
         PlayerEvents.current.OnPlayerDeath(this);
     }
 

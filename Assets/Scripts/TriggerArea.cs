@@ -1,11 +1,9 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-
 
 public class TriggerArea : MonoBehaviour
 {
     [SerializeField] int tutorialSteps = 0;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         PlayerActions player = other.GetComponentInParent<PlayerActions>();
@@ -29,6 +27,7 @@ public class TriggerArea : MonoBehaviour
 
             break;
         }
+
         gameObject.SetActive(false);
     }
 }

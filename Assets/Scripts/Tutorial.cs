@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class Tutorial : MonoBehaviour
 {
-
     [SerializeField] private GameObject JumpTutorial;
 
     [SerializeField] private GameObject SlideTutorial;
@@ -69,8 +68,9 @@ public class Tutorial : MonoBehaviour
     }
 
     private void OnSlideOpen(PlayerActions player)
-    {
-      
+    {      
+        Debug.Log("abre");
+
         if (player != owner) return;
 
         SlideCanva.gameObject.SetActive(true);
